@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geopy</title>
+</head>
+<body>
+    <form id="geopyForm">
+        <label>Digite seu endereço:</label>
+        <input type="text" id="addressInput" placeholder="Ex: rua um, 69">
+        <button type="button" onclick="searchAddress()">Pesquisar</button><br><br>
+    </form>
+
+    <div id="resultContainer"></div>
+
+    <script>
+        async function searchAddress() {
+            const addressInput = document.getElementById('addressInput').value;
+
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `address=${addressInput}`
+                });
+
+                const data = await response.json();
+
+                if ('error' in data) {
+                    alert(data.error);
+                } else {
+                    displayResult(data);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        function displayResult(result) {
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = `
+                <p>Endereço: ${result.address}</p>
+                <p>Latitude: ${result.latitude}</p>
+                <p>Longitude: ${result.longitude}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
